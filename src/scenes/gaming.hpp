@@ -14,3 +14,10 @@ void GamingAire26()
     delay(1000); // Espera un segundo para que el teclado se envíe
     Serial.println("Teclado PC gaming conectado.");
 }
+
+void GamingAire26Off()
+{
+    apagaAire();
+    delay(1000); // Espera un segundo para que el aire se apague
+    Serial.println("Aire acondicionado apagado.");
+}
