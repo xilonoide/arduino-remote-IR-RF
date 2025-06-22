@@ -1,17 +1,27 @@
-// conectar receptor y emisor a GND y a 5V
-// receptor a pin 2 Digital y emisor a pin 3 Digital en arduino nano
-
-#define RAW_BUFFER_LENGTH 750 // For air condition remotes it may require up to 750. Default is 200.
-
 #include <Arduino.h>
-#include "PinDefinitionsAndMore.h"
+
+// IR
+#define RAW_BUFFER_LENGTH 750 // For air condition IR remotes it may require up to 750. Default is 200.
+#define IR_RECEIVER_PIN 5     // Pin for IR receiver
+#define IR_SEND_PIN 3         // Pin for IR emitter
 #include <IRremote.hpp>
-#include "decode.hpp"
+
+// RF
+#define RF_RECEIVER_INTERRUPT 0 // Interrupt for RF receiver (pin D2 on Arduino Nano)
+#define RF_SEND_PIN 7           // Pin for RF sender
+#include <RCSwitch.h>
+
+// Decoder
+#include "decoder.hpp"
+
+// Scenes
 #include "devices/airedespacho.hpp"
 #include "devices/teclado.hpp"
 #include "devices/tv.hpp"
 #include "scenes/musica.hpp"
 #include "scenes/gaming.hpp"
+
+RCSwitch mySwitch = RCSwitch();
 
 const int botonPin = 12;
 bool estadoAnterior = HIGH;
@@ -57,13 +67,20 @@ void setup()
 
     Serial.begin(9600);
 
-    IrReceiver.begin(2, ENABLE_LED_FEEDBACK, USE_DEFAULT_FEEDBACK_LED_PIN);
+    // IR
+    IrReceiver.begin(IR_RECEIVER_PIN, ENABLE_LED_FEEDBACK, USE_DEFAULT_FEEDBACK_LED_PIN);
     IrSender.begin();
+
+    // RF
+    mySwitch.enableReceive(RF_RECEIVER_INTERRUPT);
+    mySwitch.enableTransmit(RF_SEND_PIN);
 }
 
 void loop()
 {
-    // decode();
+    // decodeIR();
+    // decodeIRDump();
+    // decodeRF(mySwitch);
 
     controlaBoton();
 }
